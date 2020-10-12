@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
@@ -81,7 +80,6 @@ const ChatBox = ({ location }) => {
 	const [name, setName] = React.useState("");
 	const [room, setRoom] = React.useState("");
 	const [privateUser, setPrivateUser] = React.useState({});
-	const [error, setError] = React.useState("");
 
 	const ENDPOINT = "https://room-private-chat-app.herokuapp.com";
 
@@ -106,28 +104,9 @@ const ChatBox = ({ location }) => {
 
 	React.useEffect(() => {
 		socket.on("roomData", (data) => {
-			console.log("users", data.users);
-			data.users.map((user) => {
-				setUsers([...users, user]);
-			});
+			data.users.map((user) => setUsers([...users, user]));
 		});
 	}, [users]);
-
-	React.useEffect(() => {
-		socket.on("Connect_failed", () => {
-			setError("Sorry there seems to be an issue with the connection");
-		});
-	});
-	React.useEffect(() => {
-		socket.on("Reconnect_failed", () => {
-			setError("Your device has failed to reconnect");
-		});
-	});
-	React.useEffect(() => {
-		socket.on("Error", () => {
-			setError("Connection Error");
-		});
-	});
 
 	const handleChat = () => {
 		if (chat) {
@@ -143,7 +122,7 @@ const ChatBox = ({ location }) => {
 		socket.emit("privateMessage", chat);
 		setChat("");
 	};
-	console.log(chat, messages);
+
 	const drawer = (
 		<div>
 			<div className={classes.toolbar} />
@@ -151,7 +130,7 @@ const ChatBox = ({ location }) => {
 			<h2>Room Members</h2>
 			{users.map((user, index) => (
 				<List
-					style={{ display: `${user.username == name ? "none" : "inline"}` }}
+					style={{ display: `${user.username === name ? "none" : "inline"}` }}
 					key={index}>
 					<ListItem button>
 						<Link
