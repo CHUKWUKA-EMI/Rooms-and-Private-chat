@@ -284,9 +284,7 @@ const ChatBox = ({ location }) => {
 					<form
 						onSubmit={(e) => {
 							e.preventDefault();
-							{
-								privateUser.id ? privateChat() : handleChat();
-							}
+							privateUser.id ? privateChat() : handleChat();
 						}}>
 						<TextField
 							variant="outlined"
